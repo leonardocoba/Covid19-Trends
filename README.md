@@ -27,7 +27,7 @@ The primary goal of this application is to empower students, researchers, public
 1. **Clone the Repository**: Start by cloning this repository to your local machine.
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/leonardocoba/Tuberculosis-Trends
    ```
 
 2. **Navigate to the Project Directory**: Change into the project directory.
