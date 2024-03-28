@@ -1,4 +1,4 @@
-## TB Trends Analysis Dashboard
+# TB Trends Analysis Dashboard
 
 ## Overview
 
@@ -39,7 +39,7 @@ The primary goal of this application is to empower students, researchers, public
 3. **Create a Virtual Environment**: Use Python to create a virtual environment for the project dependencies.
 
    ```bash
-   python3 -m venv my_dash_env
+   python -m venv my_dash_env
    ```
 
 4. **Activate the Virtual Environment**:
@@ -47,6 +47,11 @@ The primary goal of this application is to empower students, researchers, public
    - On macOS/Linux:
      ```bash
      source my_dash_env/bin/activate
+     ```
+
+   - On Windows:
+     ```cmd
+     my_dash_env\Scripts\activate
      ```
 
 ### Installing Dependencies
@@ -90,4 +95,3 @@ We welcome contributions from the community. If you're interested in contributin
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
----
