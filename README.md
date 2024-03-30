@@ -87,10 +87,6 @@ With the virtual environment activated, install the required Python packages usi
 
 3. **Access the Dashboard**: Open a web browser and navigate to `http://127.0.0.1:8050/` to view the dashboard.
 
-## Contributing
-
-We welcome contributions from the community. If you're interested in contributing to the TB Trends Analysis Dashboard, please read our contributing guidelines and submit a pull request.
-
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
