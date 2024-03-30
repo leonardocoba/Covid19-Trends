@@ -61,7 +61,7 @@ With the virtual environment activated, install the required Python packages usi
 1. **Install Dash and Plotly**:
 
    ```bash
-   pip install dash plotly
+   pip install dash  pandas plotly
    ```
 
 2. **Verify Installation**: Ensure that Dash and Plotly have been installed correctly.
