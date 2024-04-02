@@ -42,3 +42,30 @@ def update_graph_and_text(location, gender, age, mortality):
     description = f"The average age for the selected group is {selected_avg_age:.2f}. Compared to the complementary group, which has an average age of {complementary_avg_age:.2f}."
 
     return fig, total_count, description
+
+"""# Define a function to retrieve data from Oracle and update the graph
+def update_graph():
+    # Fetch data from the database
+    query = "SELECT * FROM toycarorders"
+    df = pd.read_sql(query, con=conn)
+    
+    # Plot the data (you can customize this based on your data)
+    graph_data = {
+        'x': df['x_column'],
+        'y': df['y_column'],
+        'type': 'bar',
+        'name': 'Data from Oracle'
+    }
+    
+    return {
+        'data': [graph_data],
+        'layout': {
+            'title': 'Data from Oracle Database'
+        }
+    }
+
+# Update the graph periodically
+@app.callback(
+    dash.dependencies.Output('tuberculosis-graph', 'figure'),
+    [dash.dependencies.Input('interval-component', 'n_intervals')]
+)"""
