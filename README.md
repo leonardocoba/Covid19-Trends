@@ -82,7 +82,7 @@ With the virtual environment activated, install the required Python packages usi
 2. **Start the Dash Application**:
 
    ```bash
-   python app.py
+   python index.py
    ```
 
 3. **Access the Dashboard**: Open a web browser and navigate to `http://127.0.0.1:8050/` to view the dashboard.
