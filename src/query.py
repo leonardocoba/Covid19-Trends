@@ -1,45 +1,58 @@
+import cx_Oracle
 import pandas as pd
-import numpy as np
 
-class QueryObject:
-    def __init__(self):
-        self.data = self._generate_dummy_data()
+def init_oracle_client():
+    cx_Oracle.init_oracle_client(lib_dir="location")
+    print("Oracle client initialized successfully.")
 
-    def _generate_dummy_data(self):
-        np.random.seed(0)  # dummy data
-        data = {
-            'Age': np.random.randint(1, 100, size=100),
-            'Country': np.random.choice(['Country A', 'Country B', 'Country C'], size=100),
-            'Disease': 'Tuberculosis',
-            'Mortality Status': np.random.choice(['Infected', 'Deaths'], size=100),
-            'Gender': np.random.choice(['Male', 'Female'], size=100)
-        }
-        return pd.DataFrame(data)
+def get_database_connection():
+    dsn = cx_Oracle.makedsn("oracle.cise.ufl.edu", 1521, sid="orcl")
+    conn = cx_Oracle.connect(user="user", password="pass", dsn=dsn)
+    print("Successfully connected to the database.")
+    return conn
 
-    def filter_data(self, gender=None, age_range=None, country=None, mortality_status=None):
-        df = self.data
-        if gender:
-            df = df[df['Gender'].isin(gender)]
-        if age_range:
-            df = df[(df['Age'] >= age_range[0]) & (df['Age'] <= age_range[1])]
-        if country:
-            df = df[df['Country'].isin(country)]
-        if mortality_status:
-            df = df[df['Mortality Status'].isin(mortality_status)]
-        return df
+def query_data(cursor, query):
+    cursor.execute(query)
+    return cursor.fetchall()
+
+def get_country_data(cursor, countries):
+    frames = []
+    base_query = {
+        'Switzerland': "SELECT * FROM PhillipsJames.SWITZAGEDISTRIBUTION",  # Updated table name
+        'South Korea': "SELECT * FROM PhillipsJames.SouthKoreaTimeAge",
+        'India': """
+            SELECT RECORDDATE AS "Date", STATE AS "State", TOTALSAMPLES AS "Samples", POSITIVE AS "Positive", 'Testing' AS "Type"
+            FROM PhillipsJames.IndiaStateTestingCovid19
+            UNION ALL
+            SELECT UPDATEDON AS "Date", STATE AS "State", TOTALDOSESADMINISTERED AS "Samples", NULL AS "Positive", 'Vaccination' AS "Type"
+            FROM PhillipsJames.IndiaStateVaccineCovid19
+        """,
+        'Italy': "SELECT * FROM PhillipsJames.ItalyProvinceCovid19",
+        'USA': "SELECT * FROM PhillipsJames.USTimeSeriesCovid19",
+        'Global': "SELECT * FROM PhillipsJames.GlobalTimeSeriesCovid19"
+    }
+    for country in countries:
+        print(f"Fetching data for {country}")
+        rows = query_data(cursor, base_query[country])
+        df = pd.DataFrame(rows, columns=[i[0] for i in cursor.description]) if rows else pd.DataFrame()
+        frames.append(df)
+    return frames
+
+def main():
+    init_oracle_client()
+    conn = get_database_connection()
+    cursor = conn.cursor()
+    countries_input = input("Enter countries separated by comma (e.g., Switzerland, India): ")
+    countries = [country.strip() for country in countries_input.split(',')]
     
-    def calculate_average_age(self, df):
-        return df['Age'].mean()
+    data_frames = get_country_data(cursor, countries)
+    combined_df = pd.concat(data_frames, ignore_index=True, sort=False) if data_frames else pd.DataFrame()
+    print("Combined DataFrame:")
+    print(combined_df)
+    
+    cursor.close()
+    conn.close()
+    print("Database connection closed.")
 
-    def calculate_complementary_average_age(self, gender=None, country=None, mortality_status=None):
-        df = self.data
-        if gender:
-            complementary_gender = {'Male': 'Female', 'Female': 'Male'}
-            df = df[df['Gender'] == complementary_gender[gender[0]]]
-        if country:
-            df = df[~df['Country'].isin(country)]
-        if mortality_status:
-            complementary_status = {'Infected': 'Deaths', 'Deaths': 'Infected'}
-            df = df[df['Mortality Status'] == complementary_status[mortality_status[0]]]
-        return self.calculate_average_age(df)
-
+if __name__ == "__main__":
+    main()

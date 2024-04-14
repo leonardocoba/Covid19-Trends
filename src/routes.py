@@ -12,16 +12,13 @@ try:
     )
     print("Successfully connected to the database.")
 
-    # Cursor to execute queries
     cursor = conn.cursor()
 
-    # Define your SQL query here
     query = "SELECT * FROM PhillipsJames.BrazilRegionCovid19"
 
     # Execute the query
     cursor.execute(query)
 
-    # Fetch and print the results
     for row in cursor:
         print(row)
 
