@@ -1,50 +1,6 @@
+import cx_Oracle
 import pandas as pd
-import numpy as np
 
-<<<<<<< Updated upstream
-class QueryObject:
-    def __init__(self):
-        self.data = self._generate_dummy_data()
-
-    def _generate_dummy_data(self):
-        np.random.seed(0)  # dummy data
-        data = {
-            'Age': np.random.randint(1, 100, size=100),
-            'Country': np.random.choice(['Country A', 'Country B', 'Country C'], size=100),
-            'Disease': 'Tuberculosis',
-            'Mortality Status': np.random.choice(['Infected', 'Deaths'], size=100),
-            'Gender': np.random.choice(['Male', 'Female'], size=100)
-        }
-        return pd.DataFrame(data)
-
-    def filter_data(self, gender=None, age_range=None, country=None, mortality_status=None):
-        df = self.data
-        if gender:
-            df = df[df['Gender'].isin(gender)]
-        if age_range:
-            df = df[(df['Age'] >= age_range[0]) & (df['Age'] <= age_range[1])]
-        if country:
-            df = df[df['Country'].isin(country)]
-        if mortality_status:
-            df = df[df['Mortality Status'].isin(mortality_status)]
-        return df
-    
-    def calculate_average_age(self, df):
-        return df['Age'].mean()
-
-    def calculate_complementary_average_age(self, gender=None, country=None, mortality_status=None):
-        df = self.data
-        if gender:
-            complementary_gender = {'Male': 'Female', 'Female': 'Male'}
-            df = df[df['Gender'] == complementary_gender[gender[0]]]
-        if country:
-            df = df[~df['Country'].isin(country)]
-        if mortality_status:
-            complementary_status = {'Infected': 'Deaths', 'Deaths': 'Infected'}
-            df = df[df['Mortality Status'] == complementary_status[mortality_status[0]]]
-        return self.calculate_average_age(df)
-
-=======
 class OracleDataBase:
     def __init__(self):
         self.conn = self.init_db_connection()
@@ -58,6 +14,7 @@ class OracleDataBase:
         conn = cx_Oracle.connect(user="leonardocobaleda", password="c8UsBv8J4N5eXlDH9fEiaNjz", dsn=dsn)
         print("Database connection initialized successfully.")
         return conn
+
 
     def init_all_data(self):
         self.IndiaData = self.fetch_india_data()
@@ -238,4 +195,3 @@ if __name__ == "__main__":
     print(db.SouthKoreaAgeData.head())
     print(db.SouthKoreaProvinceData.head())
     print(db.GlobalData.head())
->>>>>>> Stashed changes

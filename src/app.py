@@ -16,51 +16,64 @@ app.index_string = '''
     </head>
     <body>
         <style>
-            .login-page-container {
+            body {
+                font-family: Arial, sans-serif;
+                margin: 0;
+                padding: 0;
+                background-color: #333; /* Dark background for night mode */
+                color: #ccc; /* Light text color for readability in night mode */
+            }
+            .login-page-container, .home-page-container {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                height: 100vh;
-                background-color: grey;
-                padding: 20px; /* Add some padding */
+                min-height: 100vh;
+                background-color: #333; /* Consistent background color */
             }
             .login-form {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 gap: 15px;
-                margin-top: 40px; /* Add margin to top to separate from title */
             }
-            .login-input {
+            .login-input, .signup-button, .login-button {
                 width: 250px;
                 height: 40px;
                 padding: 10px;
                 border-radius: 5px;
-                border: 1px solid #ddd;
+                border: 1px solid #555;
+                background-color: #222;
+                color: #ddd;
             }
             .login-button, .signup-button {
-                cursor: pointer;
-                padding: 10px 20px;
-                border-radius: 5px;
+                background-color: #0056b3; /* Slightly darker blue for better contrast */
                 border: none;
-                background-color: #007bff;
-                color: white;
-                font-size: 16px;
             }
             .signup-button {
-                background-color: #28a745;
+                background-color: #006400; /* Darker green for better contrast */
             }
-            .login-title {
-                color: white;
-                text-align: center;
-                margin-bottom: 20px; /* Increased margin-bottom to separate from the login form */
-                font-size: 48px; /* Increased font size */
-                margin-top: 100px; /* Set margin top to 0 to stick at the top */
+            .home-page-container {
+                display: flex;
+                flex-direction: row;
                 width: 100%;
-                position: absolute;
-                top: 0; /* Position at the top */
-                left: 0; /* Align to left */
+            }
+            .filters-container {
+                width: 25%;
+                height: 100vh; /* Full height */
+                padding: 20px;
+                background-color: #444; /* Slightly lighter shade for contrast */
+                overflow-y: auto; /* Adds scroll to filters if they overflow vertically */
+            }
+            .graphs-container {
+                width: 75%;
+                display: flex;
+                flex-direction: column;
+                padding: 20px;
+            }
+            .graph {
+                flex: 1;
+                margin-bottom: 20px;
             }
         </style>
         {%app_entry%}
