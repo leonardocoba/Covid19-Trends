@@ -9,9 +9,9 @@ class OracleDataBase:
         self.init_all_data()
 
     def init_db_connection(self):
-        cx_Oracle.init_oracle_client(lib_dir="C:\\Users\\leona\\Downloads\\instantclient-basic-windows.x64-21.13.0.0.0dbru\\instantclient_21_13")
+        cx_Oracle.init_oracle_client(lib_dir="loc")
         dsn = cx_Oracle.makedsn("oracle.cise.ufl.edu", 1521, sid="orcl")
-        conn = cx_Oracle.connect(user="leonardocobaleda", password="c8UsBv8J4N5eXlDH9fEiaNjz", dsn=dsn)
+        conn = cx_Oracle.connect(user="user", password="pass", dsn=dsn)
         print("Database connection initialized successfully.")
         return conn
 
