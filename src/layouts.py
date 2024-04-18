@@ -32,11 +32,11 @@ home_page = html.Div(className='home-page-container', children=[
             {'label': 'Deaths', 'value': 'Deaths'},
             {'label': 'Cured', 'value': 'Cured'},
             {'label': 'Mortality Rate', 'value': 'MortalityRate'},
-            {'label': 'Hospitalized', 'value': 'Hospitalized'},
-            {'label': 'Intensive Care', 'value': 'IntensiveCare'},
+            {'label': 'Hospitalized Rate', 'value': 'HospitalizedRate'},
+            {'label': 'Intensive Care Rate', 'value': 'IntensiveCareRate'},
             {'label': 'Infection Rate', 'value': 'InfectionRate'},
             {'label': 'Population Density', 'value': 'PopulationDensity'}
-        ], value=['Infected', 'Deaths', 'Cured', 'MortalityRate', 'Hospitalized', 'IntensiveCare', 'InfectionRate', 'PopulationDensity']),
+        ], value=['Infected', 'Deaths', 'Cured', 'MortalityRate', 'HospitalizedRate', 'IntensiveCareRate', 'InfectionRate', 'PopulationDensity']),
         dcc.DatePickerRange(
             id='date-range-filter',
             min_date_allowed=date(2020, 1, 1),
