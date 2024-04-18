@@ -255,6 +255,14 @@ FROM
         """
         return self.query_data(query.format(prior_query=prior_query, start_date=start_date, end_date=end_date, group_by=group_by, comparison_point=comparison_point))
     
+    def filter_by_date(self, prior_query, start_date, end_date):
+        query = """
+            SELECT *
+            FROM ({prior_query}) sub
+            WHERE RECORDDATE BETWEEN TO_DATE('{start_date}', 'YYYY-MM-DD') AND TO_DATE('{end_date}', 'YYYY-MM-DD')
+        """
+        return self.query_data(query.format(prior_query=prior_query, start_date=start_date, end_date=end_date))
+
     def query_data(self, query):
         self.cursor.execute(query)
         rows = self.cursor.fetchall()
