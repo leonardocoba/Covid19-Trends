@@ -2,12 +2,12 @@ import cx_Oracle
 import pandas as pd
 
 def init_oracle_client():
-    cx_Oracle.init_oracle_client(lib_dir="C:\\Users\\leona\\Downloads\\instantclient-basic-windows.x64-21.13.0.0.0dbru\\instantclient_21_13")   
+    cx_Oracle.init_oracle_client(lib_dir="location")   
     print("Oracle client initialized successfully.")
 
 def get_database_connection():
     dsn = cx_Oracle.makedsn("oracle.cise.ufl.edu", 1521, sid="orcl")
-    conn = cx_Oracle.connect(user="leonardocobaleda", password="c8UsBv8J4N5eXlDH9fEiaNjz", dsn=dsn)
+    conn = cx_Oracle.connect(user="user", password="pass", dsn=dsn)
     print("Successfully connected to the database.")
     return conn
 
