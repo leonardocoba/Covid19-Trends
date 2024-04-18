@@ -25,7 +25,7 @@ class OracleDataBase:
         self.SouthKoreaAgeData = self.fetch_skage_data()
         self.SouthKoreaGenderData = self.fetch_skgender_data()
         self.SouthKoreaProvinceData = self.fetch_skgprovince_data()
-        #self.BrazilData = self.fetch_brazil_data()
+        self.BrazilData = self.fetch_brazil_data()
 
     def fetch_brazil_data(self):
         query = """
@@ -169,25 +169,31 @@ class OracleDataBase:
 
     def fetch_italy_data(self): 
         query = """
-        SELECT 
-            RECORDDATE AS "RecordDate", 
-            REGIONNAME AS "State",
-            HOSPITALIZEDPATIENTS as "Hospitalized",
-            INTENSIVECAREPATIENTS as "IntensiveCare",
-            RECOVERED as "TotalRecovered",
-            DEATHS as "TotalDeaths",
-            TOTALPOSITIVECASES AS "TotalConfirmed",
-            CASE 
-                WHEN TOTALPOSITIVECASES = 0 OR DEATHS = 0 THEN 0
-                ELSE ROUND((DEATHS * 1.0 / TOTALPOSITIVECASES), 5)
-            END AS "MortalityRate",
-            CASE 
-                WHEN PROVINCEPOPULATION > 0 THEN
-                    ROUND((TOTALPOSITIVECASES * 1.0 / PROVINCEPOPULATION), 5)
-                ELSE 0
-            END AS "InfectionRate"
-        FROM 
-            PhillipsJames.ItalyRegionCovid19_P
+      SELECT 
+    RECORDDATE AS "RecordDate", 
+    REGIONNAME AS "State",
+    CASE 
+        WHEN TOTALPOSITIVECASES = 0 THEN 0
+        ELSE ROUND((HOSPITALIZEDPATIENTS * 1.0 / TOTALPOSITIVECASES), 5)
+    END AS "HospitalizedRate",
+    CASE 
+        WHEN TOTALPOSITIVECASES = 0 THEN 0
+        ELSE ROUND((INTENSIVECAREPATIENTS * 1.0 / TOTALPOSITIVECASES), 5)
+    END AS "IntensiveCareRate",
+    RECOVERED as "TotalRecovered",
+    DEATHS as "TotalDeaths",
+    TOTALPOSITIVECASES AS "TotalConfirmed",
+    CASE 
+        WHEN TOTALPOSITIVECASES = 0 THEN 0
+        ELSE ROUND((DEATHS * 1.0 / TOTALPOSITIVECASES), 5)
+    END AS "MortalityRate",
+    CASE 
+        WHEN PROVINCEPOPULATION > 0 THEN
+            ROUND((TOTALPOSITIVECASES * 1.0 / PROVINCEPOPULATION), 5)
+        ELSE 0
+    END AS "InfectionRate"
+FROM 
+    PhillipsJames.ItalyRegionCovid19_P
 
         """
         return self.query_data(query)

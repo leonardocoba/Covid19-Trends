@@ -30,6 +30,7 @@ def update_mortality_options(selected_location):
         "South Korea 2": db.SouthKoreaGenderData,
         "South Korea 3": db.SouthKoreaProvinceData,
         "Global": db.GlobalData,
+        "Brazil": db.BrazilData,
     }
     
     # Basic options for Infection and Mortality Rates if they exist in the dataframe
@@ -69,6 +70,7 @@ def update_covid_graph(selected_location, selected_metrics, start_date, end_date
         "South Korea 2": db.SouthKoreaGenderData,
         "South Korea 3": db.SouthKoreaProvinceData,
         "Global": db.GlobalData,
+        "Brazil": db.BrazilData,
     }
     df = dataframes.get(selected_location, pd.DataFrame())
     if df.empty:
@@ -100,7 +102,7 @@ def update_covid_graph(selected_location, selected_metrics, start_date, end_date
 
 
 
-@callback(
+@app.callback(
     Output('rates-graph', 'figure'),
     [Input('location-filter', 'value'),
      Input('mortality-filter', 'value'),
@@ -116,6 +118,7 @@ def update_rates_graph(selected_location, selected_metrics, start_date, end_date
         "South Korea 2": db.SouthKoreaGenderData,
         "South Korea 3": db.SouthKoreaProvinceData,
         "Global": db.GlobalData,
+        "Brazil": db.BrazilData,
     }
 
     df = dataframes.get(selected_location, pd.DataFrame())
@@ -130,18 +133,19 @@ def update_rates_graph(selected_location, selected_metrics, start_date, end_date
     fig = go.Figure()
 
     if selected_location == 'Italy':
-        # Special case for Italy: Top 3, Bottom 3, and Middle 3 for Hospitalized and Intensive Care Rates
-        italy_special_metrics = ['Hospitalized', 'IntensiveCare']
+        italy_special_metrics = ['HospitalizedRate', 'IntensiveCareRate']
+        for metric in selected_metrics:
+            if metric not in italy_special_metrics and metric in df_filtered.columns:
+                plot_rates(df_filtered, fig, metric, selected_location) 
         for metric in italy_special_metrics:
             if metric in selected_metrics:
                 plot_rates(df_filtered, fig, metric, selected_location)
-        for metric in selected_metrics:
-            if metric not in italy_special_metrics and metric in df_filtered.columns:
-                plot_rates(df_filtered, fig, metric, selected_location)
+        
     elif selected_location in ['South Korea 1', 'South Korea 2']:
         plot_all_categories(df_filtered, fig, selected_metrics)
+
     elif selected_location == 'USA':
-        plot_top_density_states(df_filtered, fig, selected_metrics) 
+        plot_usa_cases(df_filtered, fig, selected_metrics)
     else:
         for metric in selected_metrics:
             if metric in df_filtered.columns:
@@ -217,22 +221,23 @@ def plot_rates(df, fig, rate_name, location):
                 mode='lines', 
                 name=trace_name
             ))
-def plot_top_density_states(df, fig, selected_metrics):
-    # Identify the top 3 states by population density
-    top_density_states = df.groupby('State')['PopulationDensity'].mean().nlargest(3).index.tolist()
-    
-    # Filter data for these states and ensure to plot only Infection Rates
-    df_top_density = df[df['State'].isin(top_density_states)]
-    for state in top_density_states:
-        state_data = df_top_density[df_top_density['State'] == state]
-        # Specific metric to plot - assuming the metric name for infection rates is 'InfectionRate'
-        metric = 'InfectionRate'  
-        if metric in df.columns and metric in selected_metrics:  # Check if metric is selected and exists in the dataframe
-            fig.add_trace(go.Scatter(
-                x=state_data['RecordDate'], 
-                y=state_data[metric], 
-                mode='lines',
-                name=f"Top Population Density {metric} - {state}"
-            ))
 
-    
+def plot_usa_cases(df, fig, selected_metrics):
+    # Check if population density is a selected metric to plot high density states
+    if 'PopulationDensity' in selected_metrics:
+        plot_high_density_states(df, fig)
+    for metric in selected_metrics:
+        if metric != 'PopulationDensity' and metric in df.columns:
+            plot_rates(df, fig, metric, 'USA')
+
+def plot_high_density_states(df, fig):
+    top_density_states = df.groupby('State')['PopulationDensity'].mean().nlargest(3).index
+    df_top_density = df[df['State'].isin(top_density_states)]
+    for index, state in enumerate(top_density_states, start=1):
+        state_data = df_top_density[df_top_density['State'] == state]
+        fig.add_trace(go.Scatter(
+            x=state_data['RecordDate'], 
+            y=state_data['InfectionRate'],  # Assuming 'InfectionRate' is an available column
+            mode='lines',
+            name=f"High Pop Density {index} - {state}"  # Adding enumeration here
+        ))
